@@ -1,5 +1,5 @@
 //
-//  Untitled.swift
+//  SwiftyCache.swift
 //  SwiftyCache
 //
 //  Version 1.0.0
