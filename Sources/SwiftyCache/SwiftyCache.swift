@@ -2,7 +2,7 @@
 //  SwiftyCache.swift
 //  SwiftyCache
 //
-//  Version 1.0.0
+//  Version 1.0.1
 //
 //  Created by CodingIran on 2025/4/10.
 //
