@@ -48,7 +48,10 @@ public final actor SwiftyCache<Key, Value>: Sendable where Key: Hashable & Senda
     ///   - totalCostLimit: The maximum total cost that the cache can hold before it starts evicting objects.
     ///   - countLimit: The maximum number of objects the cache should hold.
     ///   - clearOnMemoryPressure: Whether to clear the cache when memory pressure is detected
-    public init(totalCostLimit: Int, countLimit: Int, clearOnMemoryPressure: Bool = true) {
+    public init(totalCostLimit: Int = .max,
+                countLimit: Int = .max,
+                clearOnMemoryPressure: Bool = true)
+    {
         self.totalCostLimit = totalCostLimit
         self.countLimit = countLimit
         self.clearOnMemoryPressure = clearOnMemoryPressure
