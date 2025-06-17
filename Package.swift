@@ -11,17 +11,17 @@ let package = Package(
         .tvOS(.v13),
         .watchOS(.v6),
         .visionOS(.v1),
-        .macCatalyst(.v13)
+        .macCatalyst(.v13),
     ],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
             name: "SwiftyCache",
             targets: ["SwiftyCache"]
-        )
+        ),
     ],
     dependencies: [
-        .package(url: "https://github.com/apple/swift-collections.git", from: "1.1.4")
+        .package(url: "https://github.com/apple/swift-collections.git", from: "1.2.0"),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -29,14 +29,14 @@ let package = Package(
         .target(
             name: "SwiftyCache",
             dependencies: [
-                .product(name: "OrderedCollections", package: "swift-collections")
+                .product(name: "OrderedCollections", package: "swift-collections"),
             ],
             resources: [.copy("Resources/PrivacyInfo.xcprivacy")],
         ),
         .testTarget(
             name: "SwiftyCacheTests",
             dependencies: ["SwiftyCache"]
-        )
+        ),
     ],
     swiftLanguageModes: [.v6]
 )

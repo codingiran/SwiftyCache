@@ -2,7 +2,7 @@
 //  SwiftyCache.swift
 //  SwiftyCache
 //
-//  Version 1.0.1
+//  Version 1.0.2
 //
 //  Created by CodingIran on 2025/4/10.
 //
@@ -11,8 +11,8 @@ import Foundation
 import OrderedCollections
 
 // Enforce minimum Swift version for all platforms and build systems.
-#if swift(<5.9)
-#error("SwiftyCache doesn't support Swift versions below 5.9")
+#if swift(<5.10)
+    #error("SwiftyCache doesn't support Swift versions below 5.10")
 #endif
 
 public final actor SwiftyCache<Key, Value>: Sendable where Key: Hashable & Sendable, Value: Sendable {
@@ -55,7 +55,7 @@ public final actor SwiftyCache<Key, Value>: Sendable where Key: Hashable & Senda
         self.totalCostLimit = totalCostLimit
         self.countLimit = countLimit
         self.clearOnMemoryPressure = clearOnMemoryPressure
-        self.memoryPressureSource = .init(eventMask: [.warning, .critical])
+        memoryPressureSource = .init(eventMask: [.warning, .critical])
         memoryPressureSource.setEventHandler { [weak self] in
             guard let self else { return }
             Task {
@@ -185,7 +185,7 @@ private final class SendableDispatchMemoryPressureSource: @unchecked Sendable {
     let source: DispatchSourceMemoryPressure
 
     init(eventMask: DispatchSource.MemoryPressureEvent, queue: DispatchQueue? = nil) {
-        self.source = DispatchSource.makeMemoryPressureSource(eventMask: eventMask, queue: queue)
+        source = DispatchSource.makeMemoryPressureSource(eventMask: eventMask, queue: queue)
     }
 
     func activate() { source.activate() }
