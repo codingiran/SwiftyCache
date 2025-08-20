@@ -1,4 +1,4 @@
-# 🧠 SwiftyCache
+# 💾 SwiftyCache
 
 [![Swift Package Manager](https://img.shields.io/badge/SPM-Compatible-orange.svg?style=flat)](https://swift.org/package-manager/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
