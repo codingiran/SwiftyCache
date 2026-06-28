@@ -17,8 +17,8 @@ It supports Least-Recently-Used (LRU) eviction logic using Swift Collections’ 
 - ✅ LRU (Least-Recently-Used) eviction strategy
 - ✅ Cost-based cleanup (`totalCostLimit`)
 - ✅ Count-based cleanup (`countLimit`)
-- ✅ `MemoryWarning` cleanup
-- ✅ Thread-safe design ready
+- ✅ Memory-pressure cleanup via `DispatchSourceMemoryPressure`
+- ✅ Actor-isolated thread-safe design
 - ✅ No Objective-C / Foundation subclassing
 - ✅ 100% Swift + SPM support
 - ✅ Clean and minimal API
@@ -57,9 +57,11 @@ let cache = SwiftyCache<String, Data>(
 ### Store & retrieve values
 
 ```swift
-cache.setValue(imageData, forKey: "avatar", cost: imageData.count)
+func cacheAvatar(_ imageData: Data) async {
+    await cache.setValue(imageData, forKey: "avatar", cost: imageData.count)
 
-let cachedData = cache.value(forKey: "avatar")
+    let cachedData = await cache.value(forKey: "avatar")
+}
 ```
 
 ### Eviction
@@ -67,13 +69,22 @@ let cachedData = cache.value(forKey: "avatar")
 - Least Recently Used items are automatically evicted when:
   - `countLimit` is exceeded
   - `totalCostLimit` is exceeded
-  - Memory warning([DispatchSourceMemoryPressure](https://developer.apple.com/documentation/dispatch/dispatchsourcememorypressure)) is received
+  - Memory pressure ([DispatchSourceMemoryPressure](https://developer.apple.com/documentation/dispatch/dispatchsourcememorypressure)) is received
+
+### Update runtime configuration
+
+```swift
+await cache.setCountLimit(50)
+await cache.setTotalCostLimit(5_000)
+await cache.setClearOnMemoryPressure(false)
+await cache.setName("avatars")
+```
 
 ### Remove items
 
 ```swift
-cache.removeValue(forKey: "avatar")
-cache.removeAllValues()
+await cache.removeValue(forKey: "avatar")
+await cache.removeAllValues()
 ```
 
 ---
@@ -81,17 +92,19 @@ cache.removeAllValues()
 ## 🧪 LRU Example
 
 ```swift
-let cache = SwiftyCache<String, Int>(countLimit: 3)
+func lruExample() async {
+    let cache = SwiftyCache<String, Int>(countLimit: 3)
 
-cache.setValue(1, forKey: "A")
-cache.setValue(2, forKey: "B")
-cache.setValue(3, forKey: "C")
+    await cache.setValue(1, forKey: "A")
+    await cache.setValue(2, forKey: "B")
+    await cache.setValue(3, forKey: "C")
 
-_ = cache.value(forKey: "A") // A is now most recently used
+    _ = await cache.value(forKey: "A") // A is now most recently used
 
-cache.setValue(4, forKey: "D") // B is evicted (least recently used)
+    await cache.setValue(4, forKey: "D") // B is evicted (least recently used)
 
-print(cache.allKeys) // ["C", "A", "D"]
+    print(await cache.allKeys) // ["C", "A", "D"]
+}
 ```
 
 ---
@@ -111,8 +124,15 @@ print(cache.allKeys) // ["C", "A", "D"]
 ```swift
 SwiftyCache/
 ├── Sources/
-│   └── SwiftyCache.swift
+│   └── SwiftyCache/
+│       ├── SwiftyCache.swift
+│       └── Resources/
+│           └── PrivacyInfo.xcprivacy
+├── Tests/
+│   └── SwiftyCacheTests/
+│       └── SwiftyCacheTests.swift
 ├── Package.swift
+├── Package@swift-5.10.swift
 └── README.md ← You are here
 ```
 
