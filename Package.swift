@@ -21,7 +21,7 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/apple/swift-collections.git", from: "1.2.0"),
+        .package(url: "https://github.com/apple/swift-collections.git", exact: "1.6.0"),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -31,7 +31,7 @@ let package = Package(
             dependencies: [
                 .product(name: "OrderedCollections", package: "swift-collections"),
             ],
-            resources: [.copy("Resources/PrivacyInfo.xcprivacy")],
+            resources: [.copy("Resources/PrivacyInfo.xcprivacy")]
         ),
         .testTarget(
             name: "SwiftyCacheTests",

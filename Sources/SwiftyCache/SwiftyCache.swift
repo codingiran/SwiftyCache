@@ -2,7 +2,7 @@
 //  SwiftyCache.swift
 //  SwiftyCache
 //
-//  Version 1.0.3
+//  Version 1.0.4
 //
 //  Created by CodingIran on 2025/4/10.
 //
@@ -15,7 +15,7 @@ import OrderedCollections
     #error("SwiftyCache doesn't support Swift versions below 5.10")
 #endif
 
-public final actor SwiftyCache<Key, Value>: Sendable where Key: Hashable & Sendable, Value: Sendable {
+public final actor SwiftyCache<Key: Hashable & Sendable, Value: Sendable>: Sendable {
     /// The name of the cache.
     public private(set) var name: String
 
@@ -71,19 +71,29 @@ public final actor SwiftyCache<Key, Value>: Sendable where Key: Hashable & Senda
 
 public extension SwiftyCache {
     /// The number of values currently stored in the cache
-    var count: Int { storage.count }
+    var count: Int {
+        storage.count
+    }
 
     /// Whether the cache is empty
-    var isEmpty: Bool { storage.isEmpty }
+    var isEmpty: Bool {
+        storage.isEmpty
+    }
 
     /// Whether the cache is not empty
-    var isNotEmpty: Bool { !isEmpty }
+    var isNotEmpty: Bool {
+        !isEmpty
+    }
 
     /// Returns all keys in the cache from oldest to newest
-    var allKeys: [Key] { Array(storage.keys) }
+    var allKeys: [Key] {
+        Array(storage.keys)
+    }
 
     /// Returns all values in the cache from oldest to newest
-    var allValues: [Value] { storage.values.map(\.value) }
+    var allValues: [Value] {
+        storage.values.map(\.value)
+    }
 
     /// Insert a value into the cache with optional `cost`
     /// - Parameters:
@@ -168,7 +178,7 @@ public extension SwiftyCache {
 // MARK: - Private
 
 private extension SwiftyCache {
-    struct Entry: Sendable {
+    struct Entry {
         let value: Value
         let cost: Int
 
@@ -179,7 +189,7 @@ private extension SwiftyCache {
     }
 
     func trimIfNeeded() {
-        while !storage.isEmpty, (totalCost > totalCostLimit || count > countLimit) {
+        while !storage.isEmpty, totalCost > totalCostLimit || count > countLimit {
             let (_, entry) = storage.removeFirst()
             totalCost -= entry.cost
         }
@@ -201,9 +211,13 @@ private final class SendableDispatchMemoryPressureSource: @unchecked Sendable {
         source = DispatchSource.makeMemoryPressureSource(eventMask: eventMask, queue: queue)
     }
 
-    func activate() { source.activate() }
+    func activate() {
+        source.activate()
+    }
 
-    func cancel() { source.cancel() }
+    func cancel() {
+        source.cancel()
+    }
 
     func setEventHandler(qos: DispatchQoS = .unspecified, flags: DispatchWorkItemFlags = [], handler: SendableDispatchMemoryPressureSource.DispatchSourceHandler?) {
         source.setEventHandler(qos: qos, flags: flags) {

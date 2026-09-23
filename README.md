@@ -41,6 +41,18 @@ Then import where needed:
 import SwiftyCache
 ```
 
+### Dependency Versions
+
+Swift Collections is pinned to `1.6.0` in both manifests. This exact requirement
+also applies when SwiftyCache is used as a dependency. Collections 1.6.0 requires
+Swift 6 or newer, so Swift 5.10 toolchains are no longer supported despite the
+retained `Package@swift-5.10.swift` manifest.
+
+The pin temporarily avoids the additional Swift Span compatibility-library
+dependency observed with Collections 1.7.0 in a macOS helper executable. It does not
+replace packaging validation: applications must still verify and deploy all dynamic
+libraries required by their installed helpers before updating this dependency.
+
 ---
 
 ## 🧩 Usage
